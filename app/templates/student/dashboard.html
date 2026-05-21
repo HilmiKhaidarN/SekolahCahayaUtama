@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <span class="sidebar__label">Pelajar</span>
+    <a href="{{ url_for('student.dashboard') }}" class="sidebar__link active">Dashboard</a>
+    <a href="{{ url_for('student.lessons') }}" class="sidebar__link">Semua Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <main class="main-content">
+    <!-- Greeting -->
+    <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Selamat Datang</p>
+    <h1 class="display-lg" style="margin-bottom: var(--sp-xxl);">{{ current_user.full_name }}</h1>
+
+    <!-- Progress Block -->
+    <div class="block block-lime" style="margin-bottom: var(--sp-section);">
+      <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Progress Belajar</p>
+      <div style="display: flex; align-items: flex-end; gap: var(--sp-lg); flex-wrap: wrap; margin-bottom: var(--sp-lg);">
+        <span class="display-xl">{{ percent }}%</span>
+        <span class="body-lg">{{ completed }} dari {{ total }} materi selesai</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: {{ percent }}%;"></div>
+      </div>
+    </div>
+
+    <!-- Recent Lessons -->
+    <div style="margin-bottom: var(--sp-xxl);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-lg);">
+        <h2 class="headline">Materi Tersedia</h2>
+        <a href="{{ url_for('student.lessons') }}" class="btn btn-secondary btn-sm">Lihat Semua</a>
+      </div>
+
+      {% if lessons %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-lg);">
+        {% for lesson in lessons[:6] %}
+        <a href="{{ url_for('student.lesson_detail', lesson_id=lesson.id) }}"
+           style="text-decoration: none; display: block;">
+          <div class="card" style="height: 100%; transition: box-shadow 0.15s;"
+               onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+               onmouseout="this.style.boxShadow='none'">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-sm);">
+              <span class="badge badge-{{ lesson.level | lower }}">{{ lesson.level }}</span>
+              {% if lesson.id in completed_ids %}
+                <span style="color: var(--color-success); font-size: 18px;">✓</span>
+              {% endif %}
+            </div>
+            <h3 class="card-title" style="margin-bottom: var(--sp-xs);">{{ lesson.title }}</h3>
+            <p class="caption" style="margin-bottom: var(--sp-sm);">{{ lesson.subject }}</p>
+            <p class="body-sm" style="opacity: 0.7;">{{ lesson.description[:100] }}{% if lesson.description|length > 100 %}…{% endif %}</p>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="block block-cream" style="text-align: center;">
+        <p class="body-lg">Belum ada materi tersedia.</p>
+        <p class="body-sm" style="margin-top: var(--sp-xs); opacity: 0.7;">Hubungi admin untuk menambahkan materi.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- SDG Banner -->
+    <div class="block block-navy">
+      <p class="eyebrow" style="margin-bottom: var(--sp-sm);">SDG 4 — Quality Education</p>
+      <h2 class="headline" style="margin-bottom: var(--sp-md);">Pendidikan Berkualitas untuk Semua</h2>
+      <p class="body-lg" style="color: var(--color-inverse-ink); opacity: 0.85; max-width: 560px;">
+        Setiap materi yang kamu selesaikan adalah langkah nyata menuju masa depan yang lebih cerah dan berdaya.
+      </p>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

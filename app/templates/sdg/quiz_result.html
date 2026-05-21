@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Hasil Kuis SDG — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: var(--sp-xxl); padding-bottom: var(--sp-section); max-width: 760px;">
+
+  <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Hasil Kuis</p>
+  <h1 class="display-lg" style="margin-bottom: var(--sp-xxl);">Kuis Literasi SDG</h1>
+
+  <!-- Score Block -->
+  {% if percent >= 80 %}
+    {% set score_color = "block-lime" %}
+    {% set score_msg = "Luar biasa! Kamu sangat paham tentang SDG." %}
+  {% elif percent >= 60 %}
+    {% set score_color = "block-mint" %}
+    {% set score_msg = "Bagus! Terus pelajari lebih dalam tentang SDG." %}
+  {% elif percent >= 40 %}
+    {% set score_color = "block-cream" %}
+    {% set score_msg = "Cukup baik. Masih ada ruang untuk berkembang." %}
+  {% else %}
+    {% set score_color = "block-pink" %}
+    {% set score_msg = "Jangan menyerah! Pelajari materi SDG dan coba lagi." %}
+  {% endif %}
+
+  <div class="block {{ score_color }}" style="margin-bottom: var(--sp-section);">
+    <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Skor Kamu</p>
+    <div style="display: flex; align-items: flex-end; gap: var(--sp-lg); flex-wrap: wrap; margin-bottom: var(--sp-lg);">
+      <span class="display-xl">{{ percent }}%</span>
+      <span class="body-lg">{{ score }} benar dari {{ total }} soal</span>
+    </div>
+    <div class="progress-track" style="margin-bottom: var(--sp-lg);">
+      <div class="progress-fill" style="width: {{ percent }}%;"></div>
+    </div>
+    <p class="subhead">{{ score_msg }}</p>
+  </div>
+
+  <!-- Pembahasan -->
+  <h2 class="headline" style="margin-bottom: var(--sp-xxl);">Pembahasan Jawaban</h2>
+
+  {% for r in results %}
+  <div style="margin-bottom: var(--sp-lg); border: 1px solid var(--color-hairline); border-radius: var(--r-lg); overflow: hidden;">
+
+    <!-- Header -->
+    <div style="padding: var(--sp-lg) var(--sp-xxl); background: {% if r.correct %}var(--color-block-lime){% else %}var(--color-block-pink){% endif %}; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-sm);">
+      <div style="display: flex; align-items: center; gap: var(--sp-sm);">
+        <span class="badge badge-student">SDG {{ r.sdg }}</span>
+        <span style="font-size: 20px;">{% if r.correct %}✅{% else %}❌{% endif %}</span>
+      </div>
+      <span class="caption">{% if r.correct %}BENAR{% else %}SALAH{% endif %}</span>
+    </div>
+
+    <!-- Body -->
+    <div style="padding: var(--sp-xxl);">
+      <h3 class="headline" style="margin-bottom: var(--sp-xl);">{{ r.question }}</h3>
+
+      <div style="display: flex; flex-direction: column; gap: var(--sp-sm); margin-bottom: var(--sp-xl);">
+        {% for i, opt in enumerate(r.options) %}
+        <div style="
+          padding: var(--sp-md) var(--sp-lg);
+          border-radius: var(--r-md);
+          font-size: 18px; font-weight: 320;
+          display: flex; align-items: center; gap: var(--sp-md);
+          {% if i == r.answer %}
+            background: var(--color-block-lime); border: 1px solid var(--color-ink);
+          {% elif i == r.answered and not r.correct %}
+            background: var(--color-block-pink); border: 1px solid var(--color-hairline);
+          {% else %}
+            background: var(--color-surface-soft); border: 1px solid var(--color-hairline);
+          {% endif %}
+        ">
+          <span class="caption" style="min-width: 24px; opacity: 0.5;">{{ ['A','B','C','D'][i] }}</span>
+          {{ opt }}
+          {% if i == r.answer %}<span style="margin-left: auto;">✓ Benar</span>{% endif %}
+          {% if i == r.answered and not r.correct %}<span style="margin-left: auto;">✗ Jawabanmu</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Penjelasan -->
+      <div class="block block-cream" style="padding: var(--sp-lg) var(--sp-xxl);">
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Penjelasan</p>
+        <p class="body-sm">{{ r.explanation }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- CTA -->
+  <div style="display: flex; gap: var(--sp-md); flex-wrap: wrap; margin-top: var(--sp-xxl);">
+    <a href="{{ url_for('sdg.sdg_quiz') }}" class="btn btn-primary">Coba Lagi</a>
+    <a href="{{ url_for('sdg.sdg_overview') }}" class="btn btn-secondary">Kembali ke SDG</a>
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary">Dashboard</a>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Kelola Materi — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <span class="sidebar__label">Admin</span>
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar__link">Dashboard</a>
+    <a href="{{ url_for('admin.manage_users') }}" class="sidebar__link">Kelola Pengguna</a>
+    <a href="{{ url_for('admin.manage_lessons') }}" class="sidebar__link active">Kelola Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <main class="main-content">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: var(--sp-xxl); flex-wrap: wrap; gap: var(--sp-md);">
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Admin Panel</p>
+        <h1 class="display-lg">Kelola Materi</h1>
+      </div>
+      <a href="{{ url_for('admin.add_lesson') }}" class="btn btn-primary">+ Tambah Materi</a>
+    </div>
+
+    <div class="card">
+      {% if lessons %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Judul</th>
+              <th>Mata Pelajaran</th>
+              <th>Level</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lesson in lessons %}
+            <tr>
+              <td class="caption">{{ loop.index }}</td>
+              <td style="font-weight: 480; max-width: 260px;">{{ lesson.title }}</td>
+              <td class="body-sm">{{ lesson.subject }}</td>
+              <td>
+                <span class="badge badge-{{ lesson.level | lower }}">{{ lesson.level }}</span>
+              </td>
+              <td>
+                {% if lesson.is_published %}
+                  <span class="badge badge-active">Publik</span>
+                {% else %}
+                  <span class="badge badge-inactive">Draft</span>
+                {% endif %}
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('admin.delete_lesson', lesson_id=lesson.id) }}"
+                      style="display: inline;"
+                      onsubmit="return confirm('Hapus materi ini secara permanen?')">
+                  <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="block block-cream" style="text-align: center;">
+        <p class="body-lg">Belum ada materi.</p>
+        <a href="{{ url_for('admin.add_lesson') }}" class="btn btn-primary" style="margin-top: var(--sp-lg);">Tambah Materi</a>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

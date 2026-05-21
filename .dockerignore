@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Database lokal (jangan ikut ke image)
+instance/
+*.db
+
+# IDE & OS
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# Docs
+DESIGN.md
+README.md
+*.md
+
+# Test files
+tests/
+*.test.py

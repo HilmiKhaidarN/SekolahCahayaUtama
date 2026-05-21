@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}17 Tujuan SDG — {{ school_name }}{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div class="container" style="padding-top: var(--sp-xxl);">
+  <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Sustainable Development Goals</p>
+  <h1 class="display-xl" style="margin-bottom: var(--sp-lg); max-width: 800px;">17 Tujuan Pembangunan Berkelanjutan</h1>
+  <p class="body-lg" style="max-width: 600px; margin-bottom: var(--sp-xxl);">
+    SDGs adalah agenda global PBB 2030 untuk mengakhiri kemiskinan, melindungi bumi, dan memastikan kesejahteraan bagi semua. Pelajari setiap tujuan dan uji pemahamanmu.
+  </p>
+  <div style="display: flex; gap: var(--sp-md); flex-wrap: wrap; margin-bottom: var(--sp-section);">
+    <a href="{{ url_for('sdg.sdg_quiz') }}" class="btn btn-primary">Mulai Kuis SDG →</a>
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary">Dashboard</a>
+  </div>
+</div>
+
+<!-- SDG 4 Highlight -->
+<div class="container" style="margin-bottom: var(--sp-section);">
+  <div class="block block-lilac">
+    <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Fokus Utama Sekolah Cahaya Utama</p>
+    <h2 class="display-lg" style="margin-bottom: var(--sp-md);">SDG 4 — Pendidikan Berkualitas</h2>
+    <p class="subhead" style="max-width: 640px; margin-bottom: var(--sp-xl);">
+      Memastikan pendidikan inklusif dan berkualitas serta mendorong kesempatan belajar seumur hidup bagi semua orang.
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-lg);">
+      <div class="card-soft">
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Target 4.1</p>
+        <p class="body-sm">Semua anak perempuan dan laki-laki menyelesaikan pendidikan dasar dan menengah yang gratis dan berkualitas.</p>
+      </div>
+      <div class="card-soft">
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Target 4.4</p>
+        <p class="body-sm">Meningkatkan jumlah pemuda dan orang dewasa yang memiliki keterampilan relevan untuk pekerjaan layak.</p>
+      </div>
+      <div class="card-soft">
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Target 4.7</p>
+        <p class="body-sm">Memastikan semua pelajar memperoleh pengetahuan dan keterampilan untuk mendukung pembangunan berkelanjutan.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 17 SDG Grid -->
+<div class="container" style="margin-bottom: var(--sp-section);">
+  <h2 class="headline" style="margin-bottom: var(--sp-xxl);">Semua 17 Tujuan SDG</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-lg);">
+    {% for sdg in sdg_list %}
+    <div class="block {{ sdg.color }}" style="{% if sdg.color == 'block-navy' %}color: var(--color-inverse-ink);{% endif %}">
+      <div style="display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-md);">
+        <span style="font-size: 32px;">{{ sdg.icon }}</span>
+        <span class="eyebrow">SDG {{ sdg.no }}</span>
+      </div>
+      <h3 class="headline" style="margin-bottom: var(--sp-sm);">{{ sdg.title }}</h3>
+      <p class="body-sm" style="{% if sdg.color == 'block-navy' %}opacity: 0.85;{% else %}opacity: 0.75;{% endif %}">{{ sdg.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- CTA Kuis -->
+<div class="container" style="margin-bottom: var(--sp-section);">
+  <div class="block block-navy" style="text-align: center; padding: var(--sp-section) var(--sp-xxl);">
+    <p class="eyebrow" style="margin-bottom: var(--sp-md);">Uji Pemahamanmu</p>
+    <h2 class="display-lg" style="margin-bottom: var(--sp-lg);">Siap ikut kuis SDG?</h2>
+    <p class="body-lg" style="color: var(--color-inverse-ink); opacity: 0.85; margin-bottom: var(--sp-xxl); max-width: 480px; margin-left: auto; margin-right: auto;">
+      10 soal pilihan ganda seputar 17 tujuan SDG. Cek seberapa jauh pemahamanmu tentang isu global.
+    </p>
+    <a href="{{ url_for('sdg.sdg_quiz') }}" class="btn btn-primary" style="font-size: 20px; padding: 14px 32px;">
+      Mulai Kuis Sekarang →
+    </a>
+  </div>
+</div>
+
+{% endblock %}

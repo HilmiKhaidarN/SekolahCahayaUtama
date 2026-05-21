@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Materi Belajar — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <span class="sidebar__label">Pelajar</span>
+    <a href="{{ url_for('student.dashboard') }}" class="sidebar__link">Dashboard</a>
+    <a href="{{ url_for('student.lessons') }}" class="sidebar__link active">Semua Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <main class="main-content">
+    <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Perpustakaan Digital</p>
+    <h1 class="display-lg" style="margin-bottom: var(--sp-xxl);">Semua Materi</h1>
+
+    {% if lessons %}
+    <!-- Group by subject -->
+    {% set subjects = lessons | map(attribute='subject') | unique | list %}
+    {% for subject in subjects %}
+      <div style="margin-bottom: var(--sp-section);">
+        <div style="display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-lg);">
+          <h2 class="headline">{{ subject }}</h2>
+          <div style="flex: 1; height: 1px; background: var(--color-hairline);"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-lg);">
+          {% for lesson in lessons if lesson.subject == subject %}
+          <div class="card" style="display: flex; flex-direction: column; gap: var(--sp-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="badge badge-{{ lesson.level | lower }}">{{ lesson.level }}</span>
+              {% if lesson.id in completed_ids %}
+                <span class="badge badge-active">✓ Selesai</span>
+              {% endif %}
+            </div>
+            <div style="flex: 1;">
+              <h3 class="card-title" style="margin-bottom: var(--sp-xs);">{{ lesson.title }}</h3>
+              <p class="body-sm" style="opacity: 0.7; margin-top: var(--sp-xs);">
+                {{ lesson.description[:120] }}{% if lesson.description|length > 120 %}…{% endif %}
+              </p>
+            </div>
+            <a href="{{ url_for('student.lesson_detail', lesson_id=lesson.id) }}"
+               class="btn {% if lesson.id in completed_ids %}btn-secondary{% else %}btn-primary{% endif %} btn-sm">
+              {% if lesson.id in completed_ids %}Baca Ulang{% else %}Mulai Belajar{% endif %}
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    {% else %}
+    <div class="block block-cream" style="text-align: center; padding: var(--sp-section) var(--sp-xxl);">
+      <p class="display-lg" style="margin-bottom: var(--sp-md);">📚</p>
+      <p class="body-lg">Belum ada materi tersedia.</p>
+      <p class="body-sm" style="margin-top: var(--sp-xs); opacity: 0.7;">Hubungi admin untuk menambahkan materi belajar.</p>
+    </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

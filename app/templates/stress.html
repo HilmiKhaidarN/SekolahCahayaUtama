@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Stress Test — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: var(--sp-xxl); padding-bottom: var(--sp-section);">
+
+  <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Kubernetes HPA Demo</p>
+  <h1 class="display-lg" style="margin-bottom: var(--sp-md);">CPU Stress Test</h1>
+  <p class="body-lg" style="margin-bottom: var(--sp-xxl); max-width: 600px; opacity: 0.7;">
+    Endpoint ini menjalankan komputasi berat selama 5 detik untuk menaikkan penggunaan CPU dan men-trigger Horizontal Pod Autoscaler.
+  </p>
+
+  <!-- Result Block -->
+  <div class="block block-coral" style="margin-bottom: var(--sp-section); max-width: 640px;">
+    <p class="eyebrow" style="margin-bottom: var(--sp-lg);">Hasil Eksekusi</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-lg);">
+      <div>
+        <p class="caption" style="margin-bottom: var(--sp-xs);">Waktu Eksekusi</p>
+        <p class="display-lg">{{ elapsed }}<span style="font-size: 24px;">s</span></p>
+      </div>
+      <div>
+        <p class="caption" style="margin-bottom: var(--sp-xs);">Pod yang Merespons</p>
+        <p class="headline" style="word-break: break-all;">{{ pod_name }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-lg); margin-bottom: var(--sp-section);">
+
+    <div class="block block-lime">
+      <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Cara Kerja HPA</p>
+      <p class="headline" style="margin-bottom: var(--sp-md);">Auto Scaling</p>
+      <p class="body-sm">Kubernetes memantau CPU setiap 15 detik. Saat rata-rata CPU melewati 50%, HPA otomatis menambah jumlah Pod dari 2 hingga maksimal 5.</p>
+    </div>
+
+    <div class="block block-navy">
+      <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Load Generator</p>
+      <p class="headline" style="margin-bottom: var(--sp-md);">Tembak Trafik</p>
+      <p class="body-sm" style="color: var(--color-inverse-ink); opacity: 0.85;">Gunakan perintah berikut untuk menembak trafik tinggi ke endpoint ini dari terminal Kubernetes:</p>
+      <div style="background: rgba(255,255,255,0.1); border-radius: var(--r-md); padding: var(--sp-md); margin-top: var(--sp-md);">
+        <code style="font-family: var(--font-mono); font-size: 13px; color: var(--color-inverse-ink); word-break: break-all;">
+          kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://&lt;SERVICE_IP&gt;/stress/api; done"
+        </code>
+      </div>
+    </div>
+
+    <div class="block block-lilac">
+      <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Monitor HPA</p>
+      <p class="headline" style="margin-bottom: var(--sp-md);">Pantau Scaling</p>
+      <p class="body-sm">Jalankan perintah ini di terminal untuk memantau HPA secara real-time:</p>
+      <div style="background: rgba(0,0,0,0.08); border-radius: var(--r-md); padding: var(--sp-md); margin-top: var(--sp-md);">
+        <code style="font-family: var(--font-mono); font-size: 13px; word-break: break-all;">
+          kubectl get hpa --watch
+        </code>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div style="display: flex; gap: var(--sp-md); flex-wrap: wrap;">
+    <a href="/stress" class="btn btn-primary">🔥 Jalankan Stress Test Lagi</a>
+    <a href="/stress/api" class="btn btn-secondary">JSON Response</a>
+    <a href="/health" class="btn btn-secondary">Health Check</a>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Kelola Pengguna — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <span class="sidebar__label">Admin</span>
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar__link">Dashboard</a>
+    <a href="{{ url_for('admin.manage_users') }}" class="sidebar__link active">Kelola Pengguna</a>
+    <a href="{{ url_for('admin.manage_lessons') }}" class="sidebar__link">Kelola Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <main class="main-content">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: var(--sp-xxl); flex-wrap: wrap; gap: var(--sp-md);">
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--sp-xs);">Admin Panel</p>
+        <h1 class="display-lg">Kelola Pengguna</h1>
+      </div>
+      <a href="{{ url_for('admin.add_user') }}" class="btn btn-primary">+ Tambah Pengguna</a>
+    </div>
+
+    <div class="card">
+      {% if users %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Lengkap</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td class="caption">{{ loop.index }}</td>
+              <td style="font-weight: 480;">{{ user.full_name }}</td>
+              <td><span class="caption">{{ user.username }}</span></td>
+              <td class="body-sm">{{ user.email }}</td>
+              <td>
+                {% if user.role == 'admin' %}
+                  <span class="badge badge-admin">Admin</span>
+                {% else %}
+                  <span class="badge badge-student">Pelajar</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if user.is_active %}
+                  <span class="badge badge-active">Aktif</span>
+                {% else %}
+                  <span class="badge badge-inactive">Nonaktif</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if user.id != current_user.id %}
+                <form method="POST" action="{{ url_for('admin.toggle_user', user_id=user.id) }}"
+                      style="display: inline;"
+                      onsubmit="return confirm('Ubah status akun {{ user.full_name }}?')">
+                  <button type="submit" class="btn btn-secondary btn-sm">
+                    {% if user.is_active %}Nonaktifkan{% else %}Aktifkan{% endif %}
+                  </button>
+                </form>
+                {% else %}
+                  <span class="caption" style="opacity: 0.4;">Akun Anda</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="block block-cream" style="text-align: center;">
+        <p class="body-lg">Belum ada pengguna.</p>
+        <a href="{{ url_for('admin.add_user') }}" class="btn btn-primary" style="margin-top: var(--sp-lg);">Tambah Sekarang</a>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

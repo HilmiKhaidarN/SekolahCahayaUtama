@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Kuis SDG — {{ school_name }}{% endblock %}
+
+{% block extra_style %}
+<style>
+  .option-label {
+    display: flex; align-items: center; gap: var(--sp-md);
+    padding: var(--sp-md) var(--sp-lg);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-size: 18px; font-weight: 320;
+  }
+  .option-label:hover { background: var(--color-surface-soft); border-color: var(--color-ink); }
+  input[type="radio"]:checked + .option-label {
+    background: var(--color-primary); color: var(--color-on-primary);
+    border-color: var(--color-primary);
+  }
+  input[type="radio"] { display: none; }
+  .question-card {
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--r-lg);
+    padding: var(--sp-xxl);
+    margin-bottom: var(--sp-lg);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: var(--sp-xxl); padding-bottom: var(--sp-section); max-width: 760px;">
+
+  <p class="eyebrow" style="margin-bottom: var(--sp-sm);">SDG Quiz</p>
+  <h1 class="display-lg" style="margin-bottom: var(--sp-md);">Kuis Literasi SDG</h1>
+  <p class="body-lg" style="margin-bottom: var(--sp-xxl); opacity: 0.7;">
+    {{ total }} soal pilihan ganda. Pilih satu jawaban untuk setiap pertanyaan, lalu klik Kirim Jawaban.
+  </p>
+
+  <form method="POST" action="{{ url_for('sdg.sdg_quiz') }}">
+    {% for q in questions %}
+    <div class="question-card">
+      <div style="display: flex; align-items: center; gap: var(--sp-sm); margin-bottom: var(--sp-lg);">
+        <span class="badge badge-student">SDG {{ q.sdg }}</span>
+        <span class="caption" style="opacity: 0.5;">Soal {{ loop.index }} / {{ total }}</span>
+      </div>
+      <h3 class="headline" style="margin-bottom: var(--sp-xl);">{{ q.question }}</h3>
+      <div style="display: flex; flex-direction: column; gap: var(--sp-sm);">
+        {% for i, option in enumerate(q.options) %}
+        <div>
+          <input type="radio" name="q{{ q.id }}" id="q{{ q.id }}_{{ i }}" value="{{ i }}" required />
+          <label class="option-label" for="q{{ q.id }}_{{ i }}">
+            <span class="caption" style="min-width: 24px; opacity: 0.5;">{{ ['A','B','C','D'][i] }}</span>
+            {{ option }}
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="block block-lime" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-lg);">
+      <div>
+        <p class="headline">Siap mengirim jawaban?</p>
+        <p class="body-sm" style="opacity: 0.7; margin-top: var(--sp-xs);">Pastikan semua {{ total }} soal sudah dijawab.</p>
+      </div>
+      <button type="submit" class="btn btn-primary" style="font-size: 20px; padding: 14px 32px;">
+        Kirim Jawaban →
+      </button>
+    </div>
+  </form>
+
+  <div style="margin-top: var(--sp-xxl);">
+    <a href="{{ url_for('sdg.sdg_overview') }}" class="btn btn-secondary">← Kembali ke SDG</a>
+  </div>
+
+</div>
+{% endblock %}

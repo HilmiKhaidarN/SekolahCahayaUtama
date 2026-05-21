@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Admin — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <span class="sidebar__label">Admin</span>
+    <a href="{{ url_for('admin.dashboard') }}" class="sidebar__link active">Dashboard</a>
+    <a href="{{ url_for('admin.manage_users') }}" class="sidebar__link">Kelola Pengguna</a>
+    <a href="{{ url_for('admin.manage_lessons') }}" class="sidebar__link">Kelola Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <p class="eyebrow" style="margin-bottom: var(--sp-sm);">Admin Panel</p>
+    <h1 class="display-lg" style="margin-bottom: var(--sp-xxl);">Dashboard</h1>
+
+    <!-- Stat Cards -->
+    <div class="stat-grid" style="margin-bottom: var(--sp-section);">
+      <div class="stat-card block-lime">
+        <div class="stat-card__num">{{ total_students }}</div>
+        <div class="stat-card__label">Total Pelajar</div>
+      </div>
+      <div class="stat-card block-lilac">
+        <div class="stat-card__num">{{ total_lessons }}</div>
+        <div class="stat-card__label">Total Materi</div>
+      </div>
+      <div class="stat-card block-mint">
+        <div class="stat-card__num">{{ total_completions }}</div>
+        <div class="stat-card__label">Materi Selesai</div>
+      </div>
+    </div>
+
+    <!-- Recent Students -->
+    <div style="margin-bottom: var(--sp-xxl);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-lg);">
+        <h2 class="headline">Pelajar Terbaru</h2>
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary btn-sm">Lihat Semua</a>
+      </div>
+      <div class="card">
+        {% if recent_users %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Lengkap</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in recent_users %}
+              <tr>
+                <td>{{ user.full_name }}</td>
+                <td><span class="caption">{{ user.username }}</span></td>
+                <td class="body-sm">{{ user.email }}</td>
+                <td>
+                  {% if user.is_active %}
+                    <span class="badge badge-active">Aktif</span>
+                  {% else %}
+                    <span class="badge badge-inactive">Nonaktif</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="block block-cream" style="text-align: center;">
+          <p class="body-lg">Belum ada pelajar terdaftar.</p>
+          <a href="{{ url_for('admin.add_user') }}" class="btn btn-primary" style="margin-top: var(--sp-lg);">Tambah Pelajar</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="block block-coral">
+      <h2 class="headline" style="margin-bottom: var(--sp-md);">Aksi Cepat</h2>
+      <div style="display: flex; gap: var(--sp-md); flex-wrap: wrap;">
+        <a href="{{ url_for('admin.add_user') }}" class="btn btn-primary">+ Tambah Pengguna</a>
+        <a href="{{ url_for('admin.add_lesson') }}" class="btn btn-secondary">+ Tambah Materi</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

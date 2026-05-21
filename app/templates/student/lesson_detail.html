@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="app-layout">
+  <aside class="sidebar">
+    <span class="sidebar__label">Pelajar</span>
+    <a href="{{ url_for('student.dashboard') }}" class="sidebar__link">Dashboard</a>
+    <a href="{{ url_for('student.lessons') }}" class="sidebar__link active">Semua Materi</a>
+    <span class="sidebar__label" style="margin-top: var(--sp-lg);">Akun</span>
+    <a href="{{ url_for('auth.logout') }}" class="sidebar__link">Logout</a>
+  </aside>
+
+  <main class="main-content">
+    <div style="max-width: 720px;">
+
+      <!-- Breadcrumb -->
+      <div style="display: flex; align-items: center; gap: var(--sp-xs); margin-bottom: var(--sp-xxl);">
+        <a href="{{ url_for('student.lessons') }}" class="body-sm" style="opacity: 0.6;">Materi</a>
+        <span class="caption" style="opacity: 0.4;">/</span>
+        <span class="body-sm">{{ lesson.subject }}</span>
+      </div>
+
+      <!-- Header -->
+      <div style="margin-bottom: var(--sp-xxl);">
+        <div style="display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-md); flex-wrap: wrap;">
+          <span class="badge badge-{{ lesson.level | lower }}">{{ lesson.level }}</span>
+          <span class="badge badge-student">{{ lesson.subject }}</span>
+          {% if progress and progress.is_completed %}
+            <span class="badge badge-active">✓ Selesai</span>
+          {% endif %}
+        </div>
+        <h1 class="display-lg" style="margin-bottom: var(--sp-md);">{{ lesson.title }}</h1>
+        <p class="body-lg" style="opacity: 0.7;">{{ lesson.description }}</p>
+      </div>
+
+      <!-- Content Block -->
+      <div class="block block-cream" style="margin-bottom: var(--sp-xxl);">
+        <p class="eyebrow" style="margin-bottom: var(--sp-lg);">Isi Materi</p>
+        <div style="white-space: pre-wrap; font-size: 18px; font-weight: 320; line-height: 1.65; letter-spacing: -0.14px;">{{ lesson.content }}</div>
+      </div>
+
+      <!-- Action -->
+      <div class="block block-mint" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-lg);">
+        <div>
+          <h3 class="headline" style="margin-bottom: var(--sp-xs);">
+            {% if progress and progress.is_completed %}
+              Kamu sudah menyelesaikan materi ini 🎉
+            {% else %}
+              Sudah selesai membaca?
+            {% endif %}
+          </h3>
+          <p class="body-sm" style="opacity: 0.7;">
+            {% if progress and progress.is_completed %}
+              Diselesaikan pada {{ progress.completed_at.strftime('%d %b %Y') }}
+            {% else %}
+              Tandai sebagai selesai untuk melacak progressmu.
+            {% endif %}
+          </p>
+        </div>
+        {% if not (progress and progress.is_completed) %}
+        <form method="POST" action="{{ url_for('student.complete_lesson', lesson_id=lesson.id) }}">
+          <button type="submit" class="btn btn-primary">Tandai Selesai ✓</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <!-- Back -->
+      <div style="margin-top: var(--sp-xxl);">
+        <a href="{{ url_for('student.lessons') }}" class="btn btn-secondary">← Kembali ke Materi</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+{% endblock %}
