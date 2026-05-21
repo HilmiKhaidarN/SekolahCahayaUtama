@@ -14,7 +14,7 @@ metadata:
   labels:
     app: sekolah-cahaya-utama
 data:
-  SCHOOL_NAME: "Sekolah Cahaya Utama"
+  SCHOOL_NAME: "Sekolah Cahaya Utama "
   SCHOOL_TAGLINE: "Belajar Cerdas, Berprestasi Gemilang"
   DATABASE_URL: "sqlite:////app/instance/sekolah.db"
 

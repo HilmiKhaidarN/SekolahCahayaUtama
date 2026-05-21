@@ -26,10 +26,10 @@ USER appuser
 # Environment defaults — semua bisa di-override via Kubernetes ConfigMap
 ENV SCHOOL_NAME="Sekolah Cahaya Utama"
 ENV SCHOOL_TAGLINE="Belajar Cerdas, Berprestasi Gemilang"
-ENV SECRET_KEY="change-me-in-production"
 ENV DATABASE_URL="sqlite:////app/instance/sekolah.db"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+# SECRET_KEY jangan di-hardcode di sini — inject via Kubernetes Secret
 
 EXPOSE 5000
 

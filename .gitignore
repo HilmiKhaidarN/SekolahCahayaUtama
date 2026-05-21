@@ -19,3 +19,17 @@ instance/
 # IDE
 .vscode/
 .idea/
+
+# Laporan — jangan push ke GitHub
+laporan.js
+laporan/
+*.docx
+*.pdf
+*.tmp
+node_modules/
+package.json
+package-lock.json
+~$*
+
+# Design system — internal only
+DESIGN.md
